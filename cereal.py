@@ -1,4 +1,5 @@
 from network_min import *
+import random
 import cv2
 
 np.set_printoptions(suppress = True);
@@ -22,6 +23,27 @@ def grab_pixels(x, y, w, h, image):
 
             roi[index].append(pixel)
             count += 1;
+
+def downsample(input, output_size):
+    scale = len(input) / output_size
+    temp_pixel = [0, 0, 0]
+    temp_list = []
+
+    count = 0
+    for x in range(len(input)):
+        if (count >= scale):
+            temp_list.append(temp_pixel)
+            count = 0
+
+        for index in range(len(temp_pixel)):
+            if (temp_pixel[index] < input[x][index]):
+                temp_pixel[index] = input[x][index]
+        count += 1
+
+    random_number = 0
+    for x in range(output_size - len(temp_list)):
+        random_number = random.randint(0, len(temp_list))
+        temp_list.insert(random_number, temp_list[random_number])
 
 while True:
     ret, frame = video_capture.read()
